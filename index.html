@@ -275,6 +275,11 @@
 
   .timeline h3 { font-size: 1.6rem; }
 
+  .timeline__icon {
+    filter: grayscale(1);
+    margin-right: 0.4rem;
+  }
+
   .timeline p { margin: 0.35rem 0 0; color: var(--grau); }
 
   @media (min-width: 720px) {
@@ -435,38 +440,43 @@
       <div class="section__head">
         <span class="section__num">01 &mdash; Der Tag</span>
         <h2>Tagesablauf</h2>
-        <p class="lead">Ein langer Sommertag auf der Wiese: von der Trauung am Nachmittag bis tief in die Nacht.</p>
+        <p class="lead">Wer schon am Freitag da ist, startet mit einer kleinen Wanderung in den Tag. Der Haupttag beginnt mit der Trauung am Nachmittag und endet tief in der Nacht.</p>
       </div>
       <ol class="timeline">
         <li>
-          <time>14:30</time>
-          <h3>🥂 Ankommen &amp; Anstossen</h3>
-          <p>Kommt an, schnappt euch ein Glas Sekt und geniesst den Moment, bevor es losgeht.</p>
+          <time>10:30 &middot; Fr</time>
+          <h3><span class="timeline__icon">🥾</span>Wanderung zur Huberwinkelalm</h3>
+          <p>Für alle, die schon am Freitag da sind und Lust haben: Spaziergang zur Huberwinkelalm zum Mittagessen (hin und zurück 5 km, 200 Höhenmeter).</p>
         </li>
         <li>
           <time>15:00</time>
-          <h3>💍 Ja-Wort unter freiem Himmel</h3>
+          <h3><span class="timeline__icon">💍</span>Ja-Wort unter freiem Himmel</h3>
           <p>Wir sagen Ja! Bitte seid pünktlich, wir starten auf die Minute.</p>
         </li>
         <li>
-          <time>16:00</time>
-          <h3>📸 Apéro &amp; Fotos</h3>
-          <p>Anstossen, gratulieren, ein Gruppenfoto – danach gehört die Zeit euch.</p>
+          <time>danach</time>
+          <h3><span class="timeline__icon">🥂</span>Gratulieren &amp; Anstossen</h3>
+          <p>Zeit zum Gratulieren und Anstossen – und für alle, die uns eine Kleinigkeit überreichen möchten.</p>
         </li>
         <li>
-          <time>18:30</time>
-          <h3>🍽️ Dinner</h3>
+          <time>16:30</time>
+          <h3><span class="timeline__icon">🍰</span>Kaffee &amp; Hochzeitstorte</h3>
+          <p>Kaffee, Kuchen und unsere Hochzeitstorte. Danach geniessen wir die Nachmittagssonne auf der Terrasse bei Gesprächen und Getränken.</p>
+        </li>
+        <li>
+          <time>19:00</time>
+          <h3><span class="timeline__icon">🍸</span>Apéro</h3>
+          <p>Ein Glas in geselliger Runde, bevor es an den Tisch geht.</p>
+        </li>
+        <li>
+          <time>20:30</time>
+          <h3><span class="timeline__icon">🍽️</span>Abendessen</h3>
           <p>Gemeinsam schlemmen, ein paar Worte, aber keine endlosen Reden.</p>
         </li>
         <li>
-          <time>21:30</time>
-          <h3>💃 Eröffnungstanz</h3>
-          <p>Kurz und knackig, danach gehört die Tanzfläche allen.</p>
-        </li>
-        <li>
-          <time>22:00</time>
-          <h3>🎶 Party bis in die Nacht</h3>
-          <p>Musik, Bar und Mitternachtssnack – wir tanzen, bis der Morgen graut.</p>
+          <time>danach</time>
+          <h3><span class="timeline__icon">🎶</span>Party bis zum Morgengrauen</h3>
+          <p>Musik, Bar und Mitternachtssnack – wir tanzen, bis die Sonne wieder aufgeht.</p>
         </li>
       </ol>
     </div>
@@ -477,28 +487,28 @@
       <div class="section__head">
         <span class="section__num">02 &mdash; Ankommen &amp; bleiben</span>
         <h2>Übernachtung im Montana Hochfügen</h2>
-        <p class="lead">Wir feiern direkt im Montana Hochfügen – und für euch sind dort auch Zimmer reserviert. Bucht bitte direkt beim Hotel per E-Mail unter dem Stichwort „Bernadette &amp; Simon“. Anreise ist schon ab Freitag möglich, falls ihr das Wochenende verlängern möchtet.</p>
+        <p class="lead">Wir feiern direkt im Montana Hochfügen – und für euch sind dort auch Zimmer reserviert. Bucht bitte direkt beim Hotel per E-Mail unter dem Stichwort „Bernadette &amp; Simon“. Anreise ist schon ab Freitag möglich, falls ihr das Wochenende verlängern möchtet. Alle Zimmer sind inklusive Frühstück.</p>
       </div>
       <div class="grid">
         <article class="card">
           <span class="card__tag">Zimmer</span>
           <h3>Doppelzimmer</h3>
-          <p>1 Nacht: [Preis folgt]<br>2 Nächte: [Preis folgt]</p>
+          <p>Pro Person<br>1 Nacht: 85 €<br>2 Nächte: 160 €</p>
         </article>
         <article class="card">
           <span class="card__tag">Zimmer</span>
-          <h3>Appartement</h3>
-          <p>1 Nacht: [Preis folgt]<br>2 Nächte: [Preis folgt]</p>
+          <h3>Ferienwohnung</h3>
+          <p>Pro Person<br>1 Nacht: 99 €<br>2 Nächte: 190 €</p>
         </article>
         <article class="card">
           <span class="card__tag">Schon am Freitag da</span>
           <h3>Abendessen Freitag</h3>
-          <p>Für alle, die früher anreisen: [Preis folgt] pro Person.</p>
+          <p>Tiroler Buffet, 30 € pro Person. Essen gibt's bis 21:30 Uhr.</p>
         </article>
         <article class="card">
           <span class="card__tag">Reservation</span>
           <h3>Buchung per E-Mail</h3>
-          <p>Meldet euch direkt beim Montana Hochfügen unter dem Stichwort „Bernadette &amp; Simon“: [E-Mail-Adresse folgt]</p>
+          <p>Meldet euch direkt beim Montana Hochfügen unter dem Stichwort „Bernadette &amp; Simon“: <a href="mailto:info@montana.at">info@montana.at</a></p>
         </article>
       </div>
     </div>
@@ -509,24 +519,7 @@
       <div class="section__head">
         <span class="section__num">03 &mdash; Look</span>
         <h2>Summer Chic</h2>
-        <p class="lead">Anzug ohne Krawattenzwang, langes oder midi Kleid. Keine Tracht, kein Dirndl, kein Trachtenhemd – und bitte kein Weiss.</p>
-      </div>
-      <div class="grid">
-        <article class="card">
-          <span class="card__tag">Für sie</span>
-          <h3>Kleid oder Anzug</h3>
-          <p>Fliessende Stoffe, midi oder lang. Denkt an Blockabsätze oder flache Schuhe – wir feiern auf Wiese.</p>
-        </article>
-        <article class="card">
-          <span class="card__tag">Für ihn</span>
-          <h3>Anzug, leicht</h3>
-          <p>Leinen, Baumwolle, luftig. Krawatte optional, Sakko am Abend willkommen.</p>
-        </article>
-        <article class="card">
-          <span class="card__tag">Wetter</span>
-          <h3>Abends wird's kühl</h3>
-          <p>Bergsommer heisst 28 Grad am Nachmittag und 12 Grad um Mitternacht. Jacke oder Stola einpacken.</p>
-        </article>
+        <p class="lead">Zieht an, worin ihr euch wohlfühlt. Krawatte muss nicht sein, ein Sakko macht sich aber gut – der Anzug bleibt aber freiwillig. Kleid, Hosenanzug, Jumpsuit oder was euch sonst gefällt – Hauptsache sommerlich und mit Stil. Nur Tracht, Dirndl, Trachtenhemd und Weiss lassen wir lieber im Schrank.</p>
       </div>
     </div>
   </section>
@@ -543,7 +536,7 @@
     <div class="wrap note">
       <span class="section__num">05 &mdash; Rückmeldung</span>
       <h2>Sagt uns Bescheid</h2>
-      <p class="lead">Wir freuen uns über eure Rückmeldung bis <strong>31. März 2027</strong> – inklusive Hinweisen zum Essen.</p>
+      <p class="lead">Wir freuen uns über eure Rückmeldung bis <strong>31. März 2027</strong>.</p>
       <a class="cta" href="https://forms.gle/HIER-LINK-EINFUEGEN" target="_blank" rel="noopener">Rückmeldung</a>
     </div>
   </section>
@@ -559,12 +552,12 @@
         <article class="card">
           <span class="card__tag">Trauzeugin</span>
           <h3>Claudia Obermaier</h3>
-          <p>[Handynummer folgt]</p>
+          <p><a href="tel:+4915153944425">+49 151 53944425</a></p>
         </article>
         <article class="card">
           <span class="card__tag">Trauzeuge</span>
           <h3>Simon Eisenreich</h3>
-          <p>[Handynummer folgt]</p>
+          <p><a href="tel:+4916098070611">+49 160 98070611</a></p>
         </article>
       </div>
     </div>
