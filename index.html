@@ -703,7 +703,7 @@
     function loadWeather() {
       var el = document.getElementById('wetter-widget');
       if (!el) { return; }
-      var url = 'https://api.open-meteo.com/v1/forecast?latitude=47.2986&longitude=11.8567&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Europe%2FVienna&forecast_days=5';
+      var url = 'https://api.open-meteo.com/v1/forecast?latitude=47.270707&longitude=11.778211&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Europe%2FVienna&forecast_days=5';
       fetch(url).then(function (res) { return res.json(); }).then(function (data) {
         var codes = {
           0: 'Klar', 1: 'Meist sonnig', 2: 'Wolkig', 3: 'Bedeckt',
