@@ -273,22 +273,27 @@
     margin-bottom: 0.3rem;
   }
 
-  .timeline h3 { font-size: 1.6rem; }
+  .timeline h3 {
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
 
   .timeline__icon {
     display: inline-flex;
-    vertical-align: -0.4em;
-    margin-right: 0.5rem;
+    flex-shrink: 0;
   }
 
   .timeline__icon svg {
-    width: 1.6rem;
-    height: 1.6rem;
-    stroke: var(--bordeaux);
+    width: 1.8rem;
+    height: 1.8rem;
+    stroke: url(#iconGradient);
     fill: none;
     stroke-width: 2.2;
     stroke-linecap: round;
     stroke-linejoin: round;
+    filter: drop-shadow(0 2px 2px rgba(42, 38, 34, 0.35));
   }
 
   .timeline p { margin: 0.35rem 0 0; color: var(--grau); }
@@ -465,6 +470,15 @@
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="iconGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9c3348"/>
+      <stop offset="1" stop-color="#4a1220"/>
+    </linearGradient>
+  </defs>
+</svg>
+
 <nav class="nav">
   <div class="wrap nav__inner">
     <a class="nav__mark" href="#top">B &amp; S</a>
@@ -525,7 +539,7 @@
         </li>
         <li>
           <time>16:30</time>
-          <h3><span class="timeline__icon"><svg viewBox="0 0 40 40"><path d="M10 18h16v8c0 4-3 7-8 7s-8-3-8-7Z"/><path d="M26 20h3c2 0 3 1 3 3s-1 3-3 3h-3"/><path d="M9 33h18"/><path d="M14 12c-1-2 1-3 0-5M20 12c-1-2 1-3 0-5"/></svg></span>Kaffee &amp; Hochzeitstorte</h3>
+          <h3><span class="timeline__icon"><svg viewBox="0 0 40 40"><rect x="6" y="26" width="28" height="8" rx="1.5"/><rect x="10" y="18" width="20" height="8" rx="1.5"/><rect x="14" y="11" width="12" height="7" rx="1.5"/><path d="M20 11V7"/><circle cx="20" cy="5.4" r="1.8"/></svg></span>Kaffee &amp; Hochzeitstorte</h3>
           <p>Kaffee, Kuchen und unsere Hochzeitstorte. Danach geniessen wir die Nachmittagssonne auf der Terrasse.</p>
         </li>
         <li>
