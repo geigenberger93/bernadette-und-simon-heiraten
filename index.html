@@ -110,22 +110,69 @@
   .hero {
     position: relative;
     overflow: hidden;
-    padding: clamp(4.5rem, 12vw, 9rem) 0 clamp(4rem, 10vw, 7.5rem);
-    background:
-      radial-gradient(120% 90% at 15% 0%, rgba(174, 189, 156, 0.38) 0%, rgba(174, 189, 156, 0) 58%),
-      radial-gradient(100% 80% at 90% 100%, rgba(109, 27, 44, 0.16) 0%, rgba(109, 27, 44, 0) 60%),
-      var(--creme);
+    isolation: isolate;
+    padding: 4rem 0 5rem;
+    background: var(--tinte);
+    color: var(--tinte);
     text-align: center;
   }
 
-  .hero__grass {
-    position: absolute;
-    inset: auto 0 -1px 0;
+  .hero__photos, .hero__photo, .hero::after { position: absolute; inset: 0; }
+  .hero__photos { z-index: -2; }
+  .hero__photo {
     width: 100%;
-    height: clamp(70px, 12vw, 130px);
-    display: block;
-    color: var(--wiese-hell);
-    opacity: 0.55;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 45%;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+  .hero__photo.is-active { opacity: 1; }
+  .hero::after { content: ""; background: rgba(247, 244, 238, 0.72); z-index: -1; }
+  .hero__tools { position: absolute; top: 1rem; right: 1rem; display: flex; gap: 0.5rem; }
+  .photo-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: var(--radius);
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+  .photo-button:hover { background: rgba(109, 27, 44, 0.85); }
+  .photo-button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+  .photo-button svg { width: 22px; height: 22px; }
+  .photo-button:has(svg) .icon-fallback { display: none; }
+  body.gallery-open { overflow: hidden; }
+  .photo-gallery {
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 1rem;
+    border: 0;
+    background: #171717;
+    color: #fff;
+  }
+  .photo-gallery[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 1rem; }
+  .photo-gallery::backdrop { background: #171717; }
+  .photo-gallery__header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .photo-gallery h2 { font-size: 2rem; letter-spacing: 0; }
+  .photo-gallery__image { display: block; width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+  .photo-gallery__controls { display: flex; align-items: center; justify-content: center; gap: 1.5rem; }
+  .photo-gallery__count { min-width: 5rem; text-align: center; font-variant-numeric: tabular-nums; }
+  @media (max-width: 600px) {
+    .hero { padding: 5rem 0 5rem; }
+    .hero .wrap h1 { font-size: 3.5rem; }
+    .photo-gallery { padding: 0.75rem; }
   }
 
   .hero__eyebrow {
@@ -137,7 +184,7 @@
   }
 
   .hero h1 {
-    font-size: clamp(3rem, 12vw, 6.5rem);
+    font-size: 5rem;
     letter-spacing: 0.01em;
   }
 
@@ -463,6 +510,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
+    .hero__photo { transition: none; }
     .reveal { opacity: 1; transform: none; transition: none; }
     .card:hover { transform: none; }
   }
@@ -495,6 +543,11 @@
 </nav>
 
 <header class="hero" id="top">
+  <div class="hero__photos" id="hero-photos" aria-hidden="true"></div>
+  <div class="hero__tools">
+    <button class="photo-button" id="slideshow-pause" type="button" aria-label="Diashow pausieren" title="Diashow pausieren"><i data-lucide="pause" aria-hidden="true"></i><span class="icon-fallback" aria-hidden="true">&#10074;&#10074;</span></button>
+    <button class="photo-button" id="gallery-open" type="button" aria-label="Fotogalerie öffnen" title="Fotogalerie öffnen" aria-haspopup="dialog" aria-controls="photo-gallery"><i data-lucide="expand" aria-hidden="true"></i><span class="icon-fallback" aria-hidden="true">&#10530;</span></button>
+  </div>
   <div class="wrap">
     <p class="hero__eyebrow">Wir heiraten</p>
     <h1>Bernadette<span class="amp">&amp;</span>Simon</h1>
@@ -508,10 +561,20 @@
       <div><b data-cd="s">–</b><span>Sekunden</span></div>
     </div>
   </div>
-  <svg class="hero__grass" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-    <path fill="currentColor" d="M0 120V74c60-14 120 6 180 14s120-6 180-22 120-22 180-8 120 34 180 32 120-26 180-38 120-8 180 4 120 26 180 22v42z"/>
-  </svg>
 </header>
+
+<dialog class="photo-gallery" id="photo-gallery" aria-labelledby="gallery-title">
+  <div class="photo-gallery__header">
+    <h2 id="gallery-title">Bernadette &amp; Simon</h2>
+    <button class="photo-button" id="gallery-close" type="button" aria-label="Fotogalerie schliessen" title="Schliessen" autofocus><i data-lucide="x" aria-hidden="true"></i><span class="icon-fallback" aria-hidden="true">&#215;</span></button>
+  </div>
+  <img class="photo-gallery__image" id="gallery-image" alt="">
+  <div class="photo-gallery__controls">
+    <button class="photo-button" id="gallery-prev" type="button" aria-label="Vorheriges Foto" title="Vorheriges Foto"><i data-lucide="chevron-left" aria-hidden="true"></i><span class="icon-fallback" aria-hidden="true">&#8592;</span></button>
+    <span class="photo-gallery__count" id="gallery-count" aria-live="polite" aria-atomic="true"></span>
+    <button class="photo-button" id="gallery-next" type="button" aria-label="Nächstes Foto" title="Nächstes Foto"><i data-lucide="chevron-right" aria-hidden="true"></i><span class="icon-fallback" aria-hidden="true">&#8594;</span></button>
+  </div>
+</dialog>
 
 <main>
 
@@ -520,7 +583,7 @@
       <div class="section__head">
         <span class="section__num">01 &mdash; Der Tag</span>
         <h2>Tagesablauf</h2>
-        <p class="lead">Wer schon am Freitag da ist, kann mit einer kleinen Wanderung in den Tag starten. Der Haupttag beginnt mit der Trauung am Nachmittag und endet tief in der Nacht.</p>
+        <p class="lead">Der Haupttag beginnt mit der Trauung am Nachmittag und endet tief in der Nacht.</p>
       </div>
       <ol class="timeline">
         <li>
@@ -598,7 +661,7 @@
       <div class="section__head">
         <span class="section__num">03 &mdash; Look</span>
         <h2>Summer Chic</h2>
-        <p class="lead">Zieht an, worin ihr euch wohlfühlt. Krawatte muss nicht sein, ein Sakko macht sich sicherlich gut – der Anzug bleibt aber freiwillig. Kleid, Hosenanzug, Jumpsuit oder was euch sonst gefällt – Hauptsache sommerlich und mit Stil. Nur Tracht, Dirndl, Trachtenhemd und Weiss lassen wir lieber im Schrank.</p>
+        <p class="lead">Krawatte muss nicht sein, ein Sakko macht sich sicherlich gut – der Anzug bleibt aber freiwillig. Kleid, Hosenanzug, Jumpsuit oder was euch sonst gefällt – Hauptsache sommerlich und mit Stil. Nur Tracht, Dirndl, Trachtenhemd und Weiss lassen wir lieber im Schrank.</p>
       </div>
     </div>
   </section>
@@ -607,7 +670,7 @@
     <div class="wrap note">
       <span class="section__num">04 &mdash; Gut zu wissen</span>
       <h2>Wir feiern ohne Kinder</h2>
-      <p class="lead">So gern wir eure Kleinen mögen: Dieser Tag ist ein Abend für Erwachsene. Wir bitten euch um Verständnis, dass wir auf Kinder verzichten. Nutzt die Gelegenheit für einen unbeschwerten Abend; wir freuen uns auf euch in voller Länge.</p>
+      <p class="lead">So gern wir eure Kleinen mögen: Dieser Tag ist ein Abend für Erwachsene. Nutzt die Gelegenheit für einen unbeschwerten Abend. Wir freuen uns auf euch in voller Länge.</p>
     </div>
   </section>
 
@@ -674,7 +737,106 @@
   </div>
 </footer>
 
+<script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer onload="lucide.createIcons()"></script>
 <script>
+  (function () {
+    var photos = [
+      '0209__43_0951.jpg',
+      '0245__43_1024.jpg',
+      '0278__43_1100.jpg',
+      '0324__43_1207.jpg',
+      'WhatsApp Image 2026-10-04 at 15.42.54.jpeg',
+      'WhatsApp Image 2026-10-04 at 15.43.22 (1).jpeg',
+      'WhatsApp Image 2026-10-04 at 15.43.22.jpeg',
+      'WhatsApp Image 2026-10-04 at 15.47.36 (1).jpeg',
+      'WhatsApp Image 2026-10-04 at 15.47.36 (2).jpeg',
+      'WhatsApp Image 2026-10-04 at 15.47.36.jpeg',
+      'WhatsApp Image 2026-10-04 at 15.49.53.jpeg'
+    ].map(function (name) { return 'FotosWebsite/' + encodeURIComponent(name); });
+    for (var remaining = photos.length - 1; remaining > 0; remaining--) {
+      var randomIndex = Math.floor(Math.random() * (remaining + 1));
+      var photo = photos[remaining];
+      photos[remaining] = photos[randomIndex];
+      photos[randomIndex] = photo;
+    }
+    var background = document.getElementById('hero-photos');
+    var gallery = document.getElementById('photo-gallery');
+    var galleryImage = document.getElementById('gallery-image');
+    var opener = document.getElementById('gallery-open');
+    var pause = document.getElementById('slideshow-pause');
+    var motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var paused = motion.matches;
+    var current = 0;
+    var selected = 0;
+    var timer;
+    var slides = photos.map(function (source, index) {
+      var image = document.createElement('img');
+      image.src = source;
+      image.alt = '';
+      image.className = 'hero__photo' + (index === 0 ? ' is-active' : '');
+      if (index === 0) { image.fetchPriority = 'high'; }
+      background.appendChild(image);
+      return image;
+    });
+
+    function updatePlayback() {
+      clearInterval(timer);
+      var label = paused ? 'Diashow fortsetzen' : 'Diashow pausieren';
+      pause.setAttribute('aria-label', label);
+      pause.title = label;
+      pause.innerHTML = paused
+        ? '<i data-lucide="play" aria-hidden="true"></i><span class="icon-fallback" aria-hidden="true">&#9654;</span>'
+        : '<i data-lucide="pause" aria-hidden="true"></i><span class="icon-fallback" aria-hidden="true">&#10074;&#10074;</span>';
+      if (window.lucide) { window.lucide.createIcons(); }
+      if (paused || gallery.open || document.hidden) { return; }
+      timer = setInterval(function () {
+        var next = (current + 1) % slides.length;
+        if (!slides[next].complete || !slides[next].naturalWidth) { return; }
+        slides[current].classList.remove('is-active');
+        current = next;
+        slides[current].classList.add('is-active');
+      }, 5000);
+    }
+
+    function showPhoto(index) {
+      selected = (index + photos.length) % photos.length;
+      galleryImage.src = photos[selected];
+      galleryImage.alt = 'Bernadette und Simon – Foto ' + (selected + 1);
+      document.getElementById('gallery-count').textContent = (selected + 1) + ' / ' + photos.length;
+    }
+
+    opener.addEventListener('click', function () {
+      showPhoto(current);
+      gallery.showModal();
+      document.body.classList.add('gallery-open');
+      updatePlayback();
+    });
+    document.getElementById('gallery-close').addEventListener('click', function () { gallery.close(); });
+    gallery.addEventListener('close', function () {
+      document.body.classList.remove('gallery-open');
+      updatePlayback();
+      opener.focus();
+    });
+    document.getElementById('gallery-prev').addEventListener('click', function () { showPhoto(selected - 1); });
+    document.getElementById('gallery-next').addEventListener('click', function () { showPhoto(selected + 1); });
+    gallery.addEventListener('keydown', function (event) {
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        showPhoto(selected + (event.key === 'ArrowLeft' ? -1 : 1));
+      }
+    });
+    var touchStart;
+    galleryImage.addEventListener('touchstart', function (event) { touchStart = event.changedTouches[0].clientX; }, { passive: true });
+    galleryImage.addEventListener('touchend', function (event) {
+      var distance = event.changedTouches[0].clientX - touchStart;
+      if (Math.abs(distance) > 50) { showPhoto(selected + (distance < 0 ? 1 : -1)); }
+    }, { passive: true });
+    pause.addEventListener('click', function () { paused = !paused; updatePlayback(); });
+    document.addEventListener('visibilitychange', updatePlayback);
+    motion.addEventListener('change', function () { paused = motion.matches; updatePlayback(); });
+    updatePlayback();
+  })();
+
   (function () {
     var target = new Date('2027-07-03T15:00:00+02:00').getTime();
     var fields = {
