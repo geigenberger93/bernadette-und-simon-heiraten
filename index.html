@@ -449,6 +449,36 @@
     color: var(--grau);
   }
 
+  .guest-map {
+    height: clamp(360px, 60vw, 560px);
+    border: 1px solid rgba(109, 27, 44, 0.14);
+    border-radius: var(--radius);
+    background: var(--creme);
+    isolation: isolate;
+  }
+
+  .guest-map[hidden] { display: none; }
+  .guest-map__status, .guest-map__note { color: var(--grau); font-size: 0.9rem; }
+  .guest-map__status { margin: 0; }
+  .guest-map__note { margin: 1rem 0; }
+  .guest-map__list { columns: 3 240px; padding-left: 1.25rem; color: var(--grau); font-size: 0.9rem; }
+  .guest-map__list li { break-inside: avoid; padding-right: 1rem; }
+  .guest-map__places summary { cursor: pointer; color: var(--bordeaux); }
+  .guest-map .leaflet-container, .guest-map .leaflet-popup-content { font-family: inherit; }
+  .guest-map .guest-map__pin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--creme);
+    border-radius: 50%;
+    background: var(--bordeaux);
+    color: #fff;
+    font: 500 13px/1 'Jost', sans-serif;
+    box-shadow: 0 2px 8px rgba(42, 38, 34, 0.3);
+  }
+  .guest-map__pin--venue { background: var(--wiese); font-size: 11px; }
+  .guest-map .leaflet-marker-icon:focus-visible { outline: 3px solid var(--bordeaux); outline-offset: 3px; }
+
   /* ---------- Kids ---------- */
   .note {
     text-align: center;
@@ -533,6 +563,7 @@
       <a href="#erwachsene">Gut zu wissen</a>
       <a href="#rsvp">Rückmeldung</a>
       <a href="#trauzeugen">Trauzeugen</a>
+      <a href="#gaestekarte">Von nah &amp; fern</a>
       <a href="#anreise">Anreise</a>
     </div>
   </div>
@@ -635,7 +666,7 @@
         </article>
         <article class="card">
           <span class="card__tag">Zimmer</span>
-          <h3>Ferienwohnung<span class="card__subtitle">(2-8 Personen)</span></h3>
+          <h3>Ferienwohnung<span class="card__subtitle">(4-8 Personen)</span></h3>
           <p>Pro Person<br>1 Nacht: 99 €<br>2 Nächte: 190 €</p>
         </article>
         <article class="card">
@@ -701,10 +732,30 @@
     </div>
   </section>
 
+  <section id="gaestekarte" class="section--tint reveal" aria-labelledby="gaestekarte-title">
+    <div class="wrap">
+      <div class="section__head">
+        <span class="section__num">07 &mdash; Von nah &amp; fern</span>
+        <h2 id="gaestekarte-title">Von hier kommt ihr zu uns</h2>
+        <p class="lead">Aus der Schweiz, Bayern, Deutschland und Österreich führt euch der Weg nach Hochfügen. Hier seht ihr, aus welchen Orten unsere Gäste anreisen.</p>
+      </div>
+      <p class="guest-map__status" id="guest-map-status" role="status" hidden></p>
+      <div class="guest-map" id="guest-map" role="region" aria-label="Karte der Herkunftsorte unserer Gäste" aria-describedby="guest-map-note"></div>
+      <p class="guest-map__note" id="guest-map-note">Die Markierungen zeigen nur Ortsmittelpunkte, keine Wohnadressen.</p>
+      <details class="guest-map__places">
+        <summary>Alle Herkunftsorte als Liste</summary>
+        <p class="guest-map__note" id="guest-map-summary"></p>
+        <ul class="guest-map__list" id="guest-map-places"></ul>
+      </details>
+      <p class="guest-map__note">Die Ortsdaten sind ein fester Auszug und werden nicht automatisch mit der Tabelle synchronisiert. Beim Laden der Karte werden Verbindungen zu OpenStreetMap (Kartenkacheln) und unpkg (Kartenbibliothek Leaflet) hergestellt. Private Adressen und die Gästetabelle werden nicht übertragen. Ortskoordinaten: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap-Mitwirkende</a>.</p>
+      <noscript><p>Bitte aktiviere JavaScript, um die Karte der Herkunftsorte und die Ortsliste anzuzeigen.</p></noscript>
+    </div>
+  </section>
+
   <section id="anreise" class="reveal">
     <div class="wrap">
       <div class="section__head">
-        <span class="section__num">07 &mdash; Anreise</span>
+        <span class="section__num">08 &mdash; Anreise</span>
         <h2>So findet ihr uns</h2>
         <p class="lead">Die Montana Alm in Hochfügen ist gleichzeitig Feier- und Übernachtungsort. Weil das Wetter am Berg schnell wechselt, gibt's die aktuelle Vorschau gleich dazu.</p>
       </div>
@@ -735,6 +786,135 @@
 
 <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer onload="lucide.createIcons()"></script>
 <script>
+  (function () {
+    var places = [
+      { name: 'Adligenswil', country: 'CH', count: 1, lat: 47.070535, lng: 8.368244 },
+      { name: 'Alpnachstad', country: 'CH', count: 1, lat: 46.953266, lng: 8.274829 },
+      { name: 'Aristau', country: 'CH', count: 2, lat: 47.286906, lng: 8.364863 },
+      { name: 'Bamberg', country: 'DE', count: 2, lat: 49.891604, lng: 10.886848 },
+      { name: 'Bern', country: 'CH', count: 1, lat: 46.948474, lng: 7.452175 },
+      { name: 'Brandberg', country: 'AT', count: 2, lat: 47.166890, lng: 11.900028 },
+      { name: 'Bruchsal', country: 'DE', count: 2, lat: 49.124118, lng: 8.598024 },
+      { name: 'Emmenbrücke', country: 'CH', count: 1, lat: 47.077539, lng: 8.270942 },
+      { name: 'Ergolding', country: 'DE', count: 2, lat: 48.576341, lng: 12.171479 },
+      { name: 'Freising', country: 'DE', count: 2, lat: 48.400827, lng: 11.743957 },
+      { name: 'Kriens', country: 'CH', count: 1, lat: 47.034146, lng: 8.280799 },
+      { name: 'Küssnacht am Rigi', country: 'CH', count: 2, lat: 47.083850, lng: 8.438631 },
+      { name: 'Landshut', country: 'DE', count: 2, lat: 48.536217, lng: 12.151655 },
+      { name: 'Lossatal – Falkenhain', country: 'DE', count: 2, lat: 51.397636, lng: 12.871204 },
+      { name: 'Luzern', country: 'CH', count: 5, lat: 47.052144, lng: 8.305812 },
+      { name: 'Meggen', country: 'CH', count: 1, lat: 47.047075, lng: 8.373399 },
+      { name: 'München', country: 'DE', count: 14, lat: 48.137108, lng: 11.575382 },
+      { name: 'Oberahrain', country: 'DE', count: 2, lat: 48.603945, lng: 12.250914 },
+      { name: 'Oberschleissheim', country: 'DE', count: 1, lat: 48.254938, lng: 11.554606 },
+      { name: 'Passau', country: 'DE', count: 1, lat: 48.574823, lng: 13.460974 },
+      { name: 'Rainau – Schwabsberg', country: 'DE', count: 2, lat: 48.927943, lng: 10.140027 },
+      { name: 'Reutlingen', country: 'DE', count: 2, lat: 48.491951, lng: 9.211414 },
+      { name: 'Schalkham – Leberskirchen', country: 'DE', count: 2, lat: 48.482475, lng: 12.403975 },
+      { name: 'Seewis im Prättigau', country: 'CH', count: 2, lat: 46.982010, lng: 9.636806 },
+      { name: 'Sempach', country: 'CH', count: 1, lat: 47.135374, lng: 8.192026 },
+      { name: 'Sins', country: 'CH', count: 1, lat: 47.191032, lng: 8.394606 },
+      { name: 'St. Niklausen (Horw)', country: 'CH', count: 1, lat: 47.018704, lng: 8.339988 },
+      { name: 'Sursee', country: 'CH', count: 4, lat: 47.172530, lng: 8.106778 },
+      { name: 'Töging am Inn', country: 'DE', count: 2, lat: 48.254719, lng: 12.586497 },
+      { name: 'Uster', country: 'CH', count: 2, lat: 47.351207, lng: 8.717922 },
+      { name: 'Vilsbiburg', country: 'DE', count: 12, lat: 48.448482, lng: 12.355795 },
+      { name: 'Vilsbiburg – Achldorf', country: 'DE', count: 2, lat: 48.430662, lng: 12.355143 },
+      { name: 'Wang', country: 'DE', count: 1, lat: 48.495410, lng: 11.937308 },
+      { name: 'Zürich', country: 'CH', count: 2, lat: 47.374449, lng: 8.541042 }
+    ];
+    var countries = { CH: 'Schweiz', DE: 'Deutschland', AT: 'Österreich' };
+    var bavarianListPlaces = [
+      'Ergolding', 'Freising', 'Landshut', 'München', 'Oberahrain',
+      'Oberschleissheim', 'Passau', 'Schalkham – Leberskirchen',
+      'Töging am Inn', 'Vilsbiburg', 'Vilsbiburg – Achldorf', 'Wang'
+    ];
+    function placeLabel(place, region) {
+      return place.name + ' · ' + (region || countries[place.country]) + ' · ' + place.count + (place.count === 1 ? ' Gast' : ' Gäste');
+    }
+    var list = document.getElementById('guest-map-places');
+    var total = 0;
+    places.forEach(function (place) {
+      var item = document.createElement('li');
+      item.textContent = placeLabel(place, bavarianListPlaces.includes(place.name) ? 'Bayern' : countries[place.country]);
+      list.appendChild(item);
+      total += place.count;
+    });
+    document.getElementById('guest-map-summary').textContent = total + ' Gäste aus ' + places.length + ' Orten in 3 Ländern.';
+
+    var status = document.getElementById('guest-map-status');
+    var container = document.getElementById('guest-map');
+    var map;
+
+    function loadResource(tag, url) {
+      return new Promise(function (resolve, reject) {
+        var resource = document.createElement(tag);
+        if (tag === 'link') {
+          resource.rel = 'stylesheet';
+          resource.href = url;
+        } else {
+          resource.src = url;
+        }
+        resource.onload = resolve;
+        resource.onerror = function () {
+          resource.remove();
+          reject(new Error('Kartenressource konnte nicht geladen werden: ' + url));
+        };
+        document.head.appendChild(resource);
+      });
+    }
+
+    Promise.all([
+      loadResource('link', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'),
+      loadResource('script', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js')
+    ]).then(function () {
+        map = L.map(container, { scrollWheelZoom: false, zoomSnap: 0 });
+        var tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        });
+        tiles.on('tileerror', function () {
+          status.hidden = false;
+          status.textContent = 'Einige Kartenkacheln konnten nicht geladen werden. Die Ortsliste bleibt verfügbar; bitte lade die Seite bei Bedarf neu.';
+        });
+        tiles.addTo(map);
+        var markers = places.map(function (place) {
+          var label = placeLabel(place);
+          var popup = document.createElement('p');
+          popup.textContent = label;
+          return L.marker([place.lat, place.lng], {
+            title: label,
+            alt: label,
+            icon: L.divIcon({ className: 'guest-map__pin', html: String(place.count), iconSize: [32, 32] })
+          }).bindPopup(popup).addTo(map);
+        });
+        var venuePopup = document.createElement('p');
+        venuePopup.textContent = 'Hier feiern wir: Montana Alm, Hochfügen · 3. Juli 2027';
+        markers.push(L.marker([47.270707, 11.778211], {
+          title: 'Unser Ziel: Montana Alm, Hochfügen',
+          alt: 'Unser Ziel: Montana Alm, Hochfügen',
+          icon: L.divIcon({ className: 'guest-map__pin guest-map__pin--venue', html: 'B &amp; S', iconSize: [40, 40] })
+        }).bindPopup(venuePopup).addTo(map));
+        var bounds = L.featureGroup(markers).getBounds();
+        function fitMap() {
+          map.invalidateSize({ pan: false });
+          map.fitBounds(bounds, { padding: [40, 40], animate: false });
+        }
+        fitMap();
+        if ('ResizeObserver' in window) {
+          new ResizeObserver(fitMap).observe(container);
+        } else {
+          window.addEventListener('resize', fitMap);
+        }
+      }).catch(function (error) {
+        console.error('Karte der Herkunftsorte konnte nicht geladen werden.', error);
+        if (map) { map.remove(); map = null; }
+        container.hidden = true;
+        status.hidden = false;
+        status.textContent = 'Die Karte konnte nicht geladen werden. Bitte lade die Seite erneut oder nutze die Ortsliste.';
+      });
+  })();
+
   (function () {
     var photos = [
       '0209__43_0951.jpg',
