@@ -747,7 +747,7 @@
         <p class="guest-map__note" id="guest-map-summary"></p>
         <ul class="guest-map__list" id="guest-map-places"></ul>
       </details>
-      <p class="guest-map__note">Die anonymisierten Orts- und Gästezahlen sind ein fester Auszug und werden nicht automatisch mit dem Sheet synchronisiert. Beim Laden der Karte werden Verbindungen zu OpenStreetMap (Kartenkacheln) und unpkg (Kartenbibliothek Leaflet) hergestellt. Private Adressen und die Gästetabelle werden nicht übertragen. Ortskoordinaten: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap-Mitwirkende</a>.</p>
+      <p class="guest-map__note">Die anonymisierten Orts- und Gästezahlen sind ein fester Auszug und werden nicht automatisch mit dem Sheet synchronisiert. Beim Laden der Karte werden Verbindungen zu OpenStreetMap (Kartenkacheln) und unpkg (Kartenbibliothek Leaflet) hergestellt. Beim Öffnen eines Orts-Popups wird für Fahrzeit und Strecke nur dessen Ortsmittelpunkt an den <a href="https://project-osrm.org/" target="_blank" rel="noopener">Routenplaner OSRM</a> gesendet. Private Adressen und die Gästetabelle werden nicht übertragen. Ortskoordinaten: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap-Mitwirkende</a>.</p>
       <noscript><p>Bitte aktiviere JavaScript, um die Karte der Herkunftsorte und die Ortsliste anzuzeigen.</p></noscript>
     </div>
   </section>
@@ -889,13 +889,57 @@
         tiles.addTo(map);
         var markers = places.map(function (place) {
           var label = placeLabel(place);
-          var popup = document.createElement('p');
-          popup.textContent = label;
-          return L.marker([place.lat, place.lng], {
+          var popup = document.createElement('div');
+          var popupLabel = document.createElement('p');
+          popupLabel.textContent = label;
+          popup.appendChild(popupLabel);
+          var routeInfo = document.createElement('p');
+          routeInfo.textContent = 'Fahrzeit und Strecke werden geladen …';
+          popup.appendChild(routeInfo);
+          var routeLink = document.createElement('a');
+          routeLink.href = 'https://www.google.com/maps/dir/?api=1&origin=' + encodeURIComponent(place.lat + ',' + place.lng) + '&destination=47.270707%2C11.778211';
+          routeLink.textContent = 'Route von hier zur Montana Alm';
+          routeLink.target = '_blank';
+          routeLink.rel = 'noopener';
+          popup.appendChild(routeLink);
+          var routePromise;
+          var marker = L.marker([place.lat, place.lng], {
             title: label,
             alt: label,
             icon: L.divIcon({ className: 'guest-map__pin', html: String(place.count), iconSize: [32, 32] })
-          }).bindPopup(popup).addTo(map);
+          }).bindPopup(popup);
+          marker.on('popupopen', function () {
+            if (routePromise) { return; }
+            var routeUrl = 'https://router.project-osrm.org/route/v1/driving/' +
+              place.lng + ',' + place.lat + ';11.778211,47.270707?overview=false';
+            routePromise = fetch(routeUrl).then(function (response) {
+              if (!response.ok) {
+                throw new Error('Routenplaner antwortete mit Status ' + response.status);
+              }
+              return response.json();
+            }).then(function (data) {
+              if (data.code !== 'Ok' || !data.routes || !data.routes.length) {
+                throw new Error('Keine Route für diesen Ort gefunden.');
+              }
+              var route = data.routes[0];
+              var minutes = Math.max(1, Math.round(route.duration / 60));
+              var hours = Math.floor(minutes / 60);
+              var remainingMinutes = minutes % 60;
+              var duration = hours
+                ? hours + ' Std.' + (remainingMinutes ? ' ' + remainingMinutes + ' Min.' : '')
+                : minutes + ' Min.';
+              var distance = (route.distance / 1000).toLocaleString('de-DE', {
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1
+              });
+              routeInfo.textContent = 'Fahrzeit ca. ' + duration + ' · Strecke ca. ' + distance + ' km';
+            }).catch(function (error) {
+              console.error('Fahrzeit und Strecke konnten nicht geladen werden.', error);
+              routeInfo.textContent = 'Fahrzeit und Strecke konnten nicht geladen werden. Bitte nutze den Google-Maps-Routenlink.';
+              routePromise = null;
+            });
+          });
+          return marker.addTo(map);
         });
         var venuePopup = document.createElement('p');
         venuePopup.textContent = 'Hier feiern wir: Montana Alm, Hochfügen · 3. Juli 2027';
