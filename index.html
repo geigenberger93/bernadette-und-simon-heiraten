@@ -747,7 +747,7 @@
         <p class="guest-map__note" id="guest-map-summary"></p>
         <ul class="guest-map__list" id="guest-map-places"></ul>
       </details>
-      <p class="guest-map__note">Die Ortsdaten sind ein fester Auszug und werden nicht automatisch mit der Tabelle synchronisiert. Beim Laden der Karte werden Verbindungen zu OpenStreetMap (Kartenkacheln) und unpkg (Kartenbibliothek Leaflet) hergestellt. Private Adressen und die Gästetabelle werden nicht übertragen. Ortskoordinaten: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap-Mitwirkende</a>.</p>
+      <p class="guest-map__note">Die anonymisierten Orts- und Gästezahlen sind ein fester Auszug und werden nicht automatisch mit dem Sheet synchronisiert. Beim Laden der Karte werden Verbindungen zu OpenStreetMap (Kartenkacheln) und unpkg (Kartenbibliothek Leaflet) hergestellt. Private Adressen und die Gästetabelle werden nicht übertragen. Ortskoordinaten: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap-Mitwirkende</a>.</p>
       <noscript><p>Bitte aktiviere JavaScript, um die Karte der Herkunftsorte und die Ortsliste anzuzeigen.</p></noscript>
     </div>
   </section>
@@ -793,6 +793,7 @@
       { name: 'Aristau', country: 'CH', count: 2, lat: 47.286906, lng: 8.364863 },
       { name: 'Auw', country: 'CH', count: 1, lat: 47.211664, lng: 8.364871 },
       { name: 'Bamberg', country: 'DE', count: 2, lat: 49.891604, lng: 10.886848 },
+      { name: 'Bergen', country: 'DE', count: 2, lat: 47.794686, lng: 12.577337 },
       { name: 'Bern', country: 'CH', count: 1, lat: 46.948474, lng: 7.452175 },
       { name: 'Brandberg', country: 'AT', count: 2, lat: 47.166890, lng: 11.900028 },
       { name: 'Bruchsal', country: 'DE', count: 2, lat: 49.124118, lng: 8.598024 },
@@ -805,7 +806,7 @@
       { name: 'Lossatal – Falkenhain', country: 'DE', count: 2, lat: 51.397636, lng: 12.871204 },
       { name: 'Luzern', country: 'CH', count: 5, lat: 47.052144, lng: 8.305812 },
       { name: 'Meggen', country: 'CH', count: 1, lat: 47.047075, lng: 8.373399 },
-      { name: 'München', country: 'DE', count: 14, lat: 48.137108, lng: 11.575382 },
+      { name: 'München', country: 'DE', count: 12, lat: 48.137108, lng: 11.575382 },
       { name: 'Oberahrain', country: 'DE', count: 2, lat: 48.603945, lng: 12.250914 },
       { name: 'Oberschleissheim', country: 'DE', count: 1, lat: 48.254938, lng: 11.554606 },
       { name: 'Passau', country: 'DE', count: 1, lat: 48.574823, lng: 13.460974 },
@@ -825,7 +826,7 @@
     ];
     var countries = { CH: 'Schweiz', DE: 'Deutschland', AT: 'Österreich' };
     var bavarianPlaces = [
-      'Ergolding', 'Freising', 'Landshut', 'München', 'Oberahrain',
+      'Bergen', 'Ergolding', 'Freising', 'Landshut', 'München', 'Oberahrain',
       'Oberschleissheim', 'Passau', 'Schalkham – Leberskirchen',
       'Töging am Inn', 'Vilsbiburg', 'Vilsbiburg – Achldorf', 'Wang'
     ];
