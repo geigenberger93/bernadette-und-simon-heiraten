@@ -476,7 +476,7 @@
     font: 500 13px/1 'Jost', sans-serif;
     box-shadow: 0 2px 8px rgba(42, 38, 34, 0.3);
   }
-  .guest-map__pin--venue { background: var(--wiese); font-size: 11px; }
+  .guest-map .guest-map__pin--venue { background: var(--wiese); font-size: 11px; }
   .guest-map .leaflet-marker-icon:focus-visible { outline: 3px solid var(--bordeaux); outline-offset: 3px; }
 
   /* ---------- Kids ---------- */
@@ -741,7 +741,7 @@
       </div>
       <p class="guest-map__status" id="guest-map-status" role="status" hidden></p>
       <div class="guest-map" id="guest-map" role="region" aria-label="Karte der Herkunftsorte unserer Gäste" aria-describedby="guest-map-note"></div>
-      <p class="guest-map__note" id="guest-map-note">Die Markierungen zeigen nur Ortsmittelpunkte, keine Wohnadressen.</p>
+      <p class="guest-map__note" id="guest-map-note">Die Markierungen zeigen nur Ortsmittelpunkte, keine Wohnadressen. Zum Zoomen mit dem Mausrad Ctrl (Windows) oder Command (Mac) gedrückt halten.</p>
       <details class="guest-map__places">
         <summary>Alle Herkunftsorte als Liste</summary>
         <p class="guest-map__note" id="guest-map-summary"></p>
@@ -824,19 +824,20 @@
       { name: 'Zürich', country: 'CH', count: 2, lat: 47.374449, lng: 8.541042 }
     ];
     var countries = { CH: 'Schweiz', DE: 'Deutschland', AT: 'Österreich' };
-    var bavarianListPlaces = [
+    var bavarianPlaces = [
       'Ergolding', 'Freising', 'Landshut', 'München', 'Oberahrain',
       'Oberschleissheim', 'Passau', 'Schalkham – Leberskirchen',
       'Töging am Inn', 'Vilsbiburg', 'Vilsbiburg – Achldorf', 'Wang'
     ];
-    function placeLabel(place, region) {
-      return place.name + ' · ' + (region || countries[place.country]) + ' · ' + place.count + (place.count === 1 ? ' Gast' : ' Gäste');
+    function placeLabel(place) {
+      var region = bavarianPlaces.includes(place.name) ? 'Bayern' : countries[place.country];
+      return place.name + ' · ' + region + ' · ' + place.count + (place.count === 1 ? ' Gast' : ' Gäste');
     }
     var list = document.getElementById('guest-map-places');
     var total = 0;
     places.forEach(function (place) {
       var item = document.createElement('li');
-      item.textContent = placeLabel(place, bavarianListPlaces.includes(place.name) ? 'Bayern' : countries[place.country]);
+      item.textContent = placeLabel(place);
       list.appendChild(item);
       total += place.count;
     });
@@ -869,6 +870,13 @@
       loadResource('script', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js')
     ]).then(function () {
         map = L.map(container, { scrollWheelZoom: false, zoomSnap: 0 });
+        container.addEventListener('wheel', function (event) {
+          if (event.ctrlKey || event.metaKey) {
+            map.scrollWheelZoom.enable();
+          } else {
+            map.scrollWheelZoom.disable();
+          }
+        }, { capture: true, passive: true });
         var tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 19,
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
